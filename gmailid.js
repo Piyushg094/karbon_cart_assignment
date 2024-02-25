@@ -1,0 +1,169 @@
+const puppeteer = require('puppeteer');
+
+let browser;
+let companyData=[]
+companyGmail = async (companyNames) => {
+   browser = await puppeteer.launch({headless :false});
+  const page = await browser.newPage();
+
+  try{
+
+    for(const companyName of companyNames){
+
+    await page.goto('https://www.google.com/');
+    
+  // Wait for the textarea to be present
+  
+  await page.waitForSelector('textarea' , { waitUntil: "networkidle2", timeout: 0 });
+
+  // Type into the textarea
+  await page.type('textarea', `${companyName} company email address`);
+
+ 
+  // Wait for navigation to complete after pressing "Enter"
+  await Promise.all([
+      page.waitForNavigation(), // The promise resolves after navigation has finished
+      page.keyboard.press('Enter'), // Clicking the link will indirectly cause a navigation
+  ]);
+    
+ 
+
+  const tableEmail = await page.evaluate(() => {
+    const emailElement = document.querySelector('.Crs1tb b');
+    return emailElement ? emailElement.innerText : null;
+  });
+
+  if (tableEmail) {
+    console.log('Company Gmail ID:', tableEmail);
+    companyData.push({ company: companyName, tableEmail });
+  } else {
+    // If the first attempt fails, try the second attempt
+    const email = await page.evaluate(() => {
+        const span = document.querySelector('.ILfuVd b');
+        return span ? span.innerText : null;
+      });
+
+    if (email) {
+      console.log('Company Gmail ID (Table):', email);
+      companyData.push({ company: companyName, email: email });
+    } else {
+      console.log(`No search result found for ${companyName}.`);
+      companyData.push({ company: companyName, email: 'Not Found' });
+    }
+  }
+}
+}
+catch (error) {
+    console.error('Error:', error);
+  } finally {
+    await browser.close();
+  }
+ 
+  console.log('company data',companyData)
+
+}
+
+
+const companyNames = [
+  "ADRENALIN ESYSTEMS LIMITED",
+  "ADV DETAILING AND DESIGN APPLICATIONS INDIA PRIVATE LIMITED",
+  "ADVA OPTICAL NETWORKING INDIA PRIVATE LIMITED",
+  "ADVAITA INDIA CONSULTING PRIVATE LIMITED",
+  "ADVAIYA SOLUTIONS (P) LTD.",
+  "ADVANCED BUSINESS & HEALTHCARE SOLUTIONS INDIA PRIVATE LIMITED",
+  "ADVANCED INVESTMENT MECHANICS INDIA PRIVATE LIMITED",
+  "ADVANTEST INDIA PRIVATE LIMITED",
+  "ADVANTMED INDIA LLP",
+  "ADVANZ PHARMA SERVICES (INDIA) PRIVATE LIMITED",
+  "ADVARRA INDIA PRIVATE LIMITED",
+  "ADVISOR360 SOFTWARE PRIVATE LIMITED",
+  "AECO TECHNOSTRUCT PRIVATE LIMITED",
+  "AECOM INDIA GLOBAL SERVICES PRIVATE LIMITED",
+  "AECOR DIGITAL INTERNATIONAL PRIVATE LIMITED",
+  "AEGIS CUSTOMER SUPPORT SERVICES PVT LTD",
+  "AEL DATASERVICES LLP",
+  "AEON COMMUNICATION PRIVATE LIMITED",
+  "AEREN IP SERVICES PVT. LTD.",
+  "AEREN IT SOLUTIONS PVT. LTD.",
+  "AEREON INDIA PRIVATE LIMITED.",
+  "AEROSPIKE INDIA PRIVATE LIMITED",
+  "AEXONIC TECHNOLOGIES PRIVATE LIMITED",
+  "AFFINITY ANSWERS PRIVATE LIMITED",
+  "AFFINITY GLOBAL ADVERTISING PVT. LTD.",
+  "AFOUR TECHNOLOGIES PVT. LTD.",
+  "AGASTHA SOFTWARE PVT. LTD.",
+  "AGATHSYA TECHNOLOGIES PRIVATE LIMITED",
+  "AGCO TRADING (INDIA) PRIVATE LIMITED",
+  "AGGRANDIZE VENTURE PRIVATE LIMITED",
+  "AGILE ICO PVT LTD",
+  "AGILE LINK TECHNOLOGIES",
+  "AGILENT TECHNOLOGIES INTERNATIONAL PVT.LTD.",
+  "AGILIANCE INDIA PVT LTD",
+  "AGILITY E SERVICES PRIVATE LIMITED",
+  "AGILON HEALTH INDIA PRIVATE LIMITED",
+  "AGNEXT TECHNOLOGIES PRIVATE LTDAGNISYS TECHNOLOGY (P) LTD.",
+  "AGNITIO SYSTEMS",
+  "AGNITY COMMUNICATIONS PVT. LTD.",
+  "AGNITY INDIA TECHNOLOGIES PVT LTD",
+  "AGNITY TECHNOLOGIES PRIVATE LIMITED",
+  "AGREETA SOLUTIONS PRIVATE LIMITED",
+  "AGS HEALTH PVT. LTD",
+  "AGT ELECTRONICS LTD",
+  "AGTECHPRO PRIVATE LIMITED",
+  "AHANA RAY TECHNOLOGIES INDIA PRIVATE LIMITED",
+  "AI COGITO INDIA PRIVATE LIMITED",
+  "AI SQUARE GLOBAL SOLUTIONS LLP",
+  "AIDASTECH INDIA PRIVATE LIMITED",
+  "AIE FIBER RESOURCE AND TRADING (INDIA) PRIVATE LIMITED",
+  "AIGENEDGE PRIVATE LIMITED",
+  "AIGILX HEALTH TECHNOLOGIES PVT LTD",
+  "AIMBEYOND INFOTECH PRIVATE LIMITED",
+  "AIML SQUARE PRIVATE LIMITED",
+  "AIMTRONICS SEMICONDUCTOR INDIA PVT LTD",
+  "AINS INDIA PVT LTD",
+  "AINSURTECH PVT LTD",
+  "AIOPSGROUP COMMERCE INDIA PRIVATE LIMITED",
+  "AIRAMATRIX PRIVATE LIMITED",
+  "AIRAVANA SYSTEMS PRIVATE LIMITED",
+  "AIRBUS GROUP INDIA PVT. LTD.",
+  "AIRCHECK INDIA PVT. LTD.",
+  "AIRDATA TECHNOLOGIES PRIVATE LIMITED",
+  "AIREI INDIA PRIVATE LTD",
+  "AIRMEET NETWORKS PRIVATE LIMITED",
+  "AIRO DIGITAL LABS INDIA PRIVATE LIMITED",
+  "AIRO GLOBAL SOFTWARE PRIVATE LIMITED",
+  "AIROHA TECHNOLOGY INDIA PRIVATE LIMITED",
+  "AIRTEL INTERNATIONAL LLP",
+  "AITHENT TECHNOLOGIES PVT. LTD.",
+  "AJIRA AI SOFTWARE INDIA PVT LTD",
+  "AJOSYS TECHNOLOGY SOLUTIONS PVT LTD",
+  "AJRITH TECH PRIVATE LIMITED",
+  "AJS SOFTWARE TECHNOLOGIES PRIVATE LIMITED",
+  "AJUBA COMMERCE PVT. LTD.",
+  "AK AEROTEK SOFTWARE CENTRE PVT. LTD.",
+  "AK SURYA POWER MAGIC PVT LTD",
+  "AKEO SOFTWARE SOLUTIONS PRIVATE LIMITED",
+  "AKIKO SHERMAN INFOTECH PRIVATE LIMITED",
+  "AKOTS INDIA PVT. LTD.",
+  "AKRIDATA INDIA PRIVATE LIMITED",
+  "AKSA LEGACIES PRIVATE LIMITED",
+  "AKSHAY RAJENDRA SHANBHAG",
+  "AKSHAY VANIJYA & FINANCE LTD",
+  "ALAMY IMAGES INDIA (P) LTD",
+  "ALAN SOLUTIONSALATION INDIA PRIVATE LIMITED",
+  "ALCAX SOLUTIONS",
+  "ALCODEX TECHNOLOGIES PVT. LTD.",
+  "ALE INDIA PVT LTD.",
+  "ALEKHA IT PRIVATE LIMITED",
+  "ALEPT CONSULTING PRIVATE LIMITED",
+  "ALERTOPS INDIA PRIVATE LIMITED",
+  "ALETHEA COMMUNICATIONS TECHNOLOGIES PVT LTD",
+  "ALFA KPO PVT. LTD.",
+  "ALFANAR ENGINEERING SERVICES INDIA PVT LTD",
+  "ALGONICS SYSTEMS PRIVATE LIMITED",
+  "ALGORHYTHM TECH PVT LTD"
+
+];
+
+
+companyGmail(companyNames)
